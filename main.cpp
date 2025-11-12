@@ -1,9 +1,10 @@
 #include <iostream>
 
+template <typename T>
 class MyVector
 {
 private:
-    int *data;  // Указатель на массив
+    T *data;    // Указатель на массив
     int size;   // сколько реально элементов мы положили.
     int volume; // сколько памяти выделено
 
@@ -26,14 +27,14 @@ public:
     }
 
     // Добавление элемента
-    void push_back(int value)
+    void push_back(const T &value)
     {
         // volume всегда >= size. Когда массив заполнен, мы удваиваем volume, чтобы потом добавлять элементы без частых копирований.
         if (size >= volume)
         {
             // нужно больше памяти
             int newVolume = (volume == 0) ? 1 : volume * 2;
-            int *newData = new int[newVolume];
+            T *newData = new T[newVolume];
 
             // копируем старые данные
             for (int i = 0; i < size; ++i)
@@ -49,18 +50,18 @@ public:
     }
 
     // Получение элемента по индексу
-    int operator[](int index) const
+    T &operator[](int index)
     {
         return data[index];
     }
 
     // Текущее количество элементов
-    int getSize() const
+    int getSize()
     {
         return size;
     }
 
-    int getVolume() const
+    int getVolume()
     {
         return volume;
     }
@@ -68,25 +69,53 @@ public:
 
 int main()
 {
-    MyVector v;
+    MyVector<int> vi; // вектор для int
+    vi.push_back(10);
+    vi.push_back(20);
+    vi.push_back(30);
+    vi.push_back(40);
+    vi.push_back(50);
+    vi.push_back(6);
+    vi.push_back(7);
+    vi.push_back(8);
 
-    v.push_back(1);
-    v.push_back(2);
-    v.push_back(3);
-    v.push_back(4);
-    v.push_back(5);
-    v.push_back(6);
-    v.push_back(7);
-    v.push_back(8);
-    // v.push_back(9);
-    // v.push_back(10);
+    MyVector<double> vd; // вектор для double
+    vd.push_back(3.14);
+    vd.push_back(2.71);
 
-    for (int i = 0; i < v.getSize(); ++i)
-        std::cout << v[i] << ", ";
+    MyVector<std::string> vs; // вектор для строк
+    vs.push_back("Hello");
+    vs.push_back("World");
+    vs.push_back("this");
+    vs.push_back("is");
+    vs.push_back("string");
+
+    // Integer
+    std::cout << "---------Integer-------------" << std::endl;
+    for (int i = 0; i < vi.getSize(); ++i)
+        std::cout << vi[i] << ", ";
 
     std::cout << std::endl;
-    std::cout << "Size arr: " << v.getSize() << std::endl;
-    std::cout << "volume: " << v.getVolume() << std::endl;
+    std::cout << "Integer Size arr: " << vi.getSize() << std::endl;
+    std::cout << "Integer volume: " << vi.getVolume() << std::endl;
+
+    // Double
+    std::cout << "----------Double------------" << std::endl;
+    for (int i = 0; i < vd.getSize(); ++i)
+        std::cout << vd[i] << ", ";
+
+    std::cout << std::endl;
+    std::cout << "Double Size arr: " << vd.getSize() << std::endl;
+    std::cout << "Double volume: " << vd.getVolume() << std::endl;
+
+    // String
+    std::cout << "----------String------------" << std::endl;
+    for (int i = 0; i < vs.getSize(); ++i)
+        std::cout << vs[i] << ", ";
+
+    std::cout << std::endl;
+    std::cout << "String Size arr: " << vs.getSize() << std::endl;
+    std::cout << "String volume: " << vs.getVolume() << std::endl;
 
     return 0;
 }

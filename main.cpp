@@ -88,6 +88,48 @@ public:
         size = 0;
     }
 
+    void insert(int index, const T &value)
+    {
+        if (index < 0 || index > size)
+            return;
+
+        // Если нет места — увеличиваем capacity
+        if (size == capacity)
+        {
+            int newCapacity = (capacity == 0) ? 1 : capacity * 2;
+            reserve(newCapacity);
+        }
+
+        // Сдвигаем элементы вправо, начиная с конца
+        // Идём с конца чтобы не перезаписать данные
+        for (int i = size; i > index; --i)
+        {
+            data[i] = data[i - 1];
+        }
+
+        // Вставляем новый элемент
+        data[index] = value;
+
+        ++size;
+    }
+
+    void erase(int index)
+    {
+        if (index < 0 || index >= size)
+            return;
+
+        // Вызываем деструктор удаляемого элемента
+        data[index].~T();
+
+        // Сдвигаем все элементы после index на одну позицию влево
+        for (int i = index; i < size - 1; ++i)
+        {
+            data[i] = data[i + 1];
+        }
+
+        --size;
+    }
+
     // Получение элемента по индексу
     T &operator[](int index)
     {
@@ -109,11 +151,11 @@ public:
 int main()
 {
     MyVector<int> vi; // вектор для int
-    vi.push_back(10);
-    vi.push_back(20);
-    vi.push_back(30);
-    vi.push_back(40);
-    vi.push_back(50);
+    vi.push_back(1);
+    vi.push_back(2);
+    vi.push_back(3);
+    vi.push_back(4);
+    vi.push_back(5);
     vi.push_back(6);
     vi.push_back(7);
     vi.push_back(8);
@@ -122,6 +164,9 @@ int main()
     vi.pop_back();
 
     // vi.clear();
+
+    vi.insert(1, 99);
+    vi.erase(1);
 
     // Integer
     std::cout << "---------Integer-------------" << std::endl;
@@ -173,6 +218,14 @@ int main()
       push_back() видит, что size == capacity (память закончилась)
       Вектор увеличивает свою ёмкость (capacity), обычно удваивая её, чтобы обеспечить быстрые вставки в будущем
       Цель reserve() — минимизировать дорогие операции. Перераспределение и копирование памяти — это медленные операции.
+
+      =================================================================================================================
+
+      Метод insert у std::vector вставляет элементы в середину вектора
+      Все элементы, начиная с позиции pos, сдвигаются вправо.
+      В указанную позицию помещается новый элемент.
+      Если места не хватает vector увеличит capacity.
+      Возвращает итератор на вставленный элемент.
     */
 
     return 0;
